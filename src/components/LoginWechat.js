@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'dva'
-import { Button } from 'antd'
+import { Button, notification, Icon } from 'antd'
 import io from 'socket.io-client'
 import { notify } from '../utils'
 import { APIPATH } from '../constants'
@@ -46,8 +46,19 @@ class LoginWechat extends React.Component {
 
     this.socket.on('logout', () => {
       console.log('logout')
-      this.props.dispatch({ type: 'user/logoutSucceed' })
+      this.props.dispatch({ type: 'user/clearUserInfo' })
       notify('info', '当前用户已退出')
+    })
+
+    this.socket.on('serverError', err => {
+      console.log('server error')
+      const args = {
+        message: '服务器出现为题',
+        description: err,
+        duration: 0,
+        icon: <Icon type='smile' style={{ color: '#108ee9' }} />
+      }
+      notification.open(args)
     })
 
     this.socket.on('loginSucceed', user => {

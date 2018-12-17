@@ -3,9 +3,7 @@ import { connect } from 'dva'
 import { Select, Button } from 'antd'
 
 class GroupList extends React.Component {
-  state = {
-    isLoading: false
-  }
+  state = {}
 
   _renderOptions = list => {
     return list.map(item => (
@@ -30,7 +28,7 @@ class GroupList extends React.Component {
   }
 
   render() {
-    const { list, selectedGroups, isLogin, user } = this.props
+    const { list, selectedGroups, isLogin, user, isLoading } = this.props
     if (!isLogin) return null
     return (
       <div>
@@ -50,10 +48,9 @@ class GroupList extends React.Component {
         ) : (
           <div>
             <Button
-              loading={this.state.isLoading}
+              loading={isLoading}
               disabled={!isLogin}
               onClick={() => {
-                this.setState({ isLoading: true })
                 this.props.dispatch({
                   type: 'group/fetch',
                   payload: { user: user.payload.name }
@@ -71,6 +68,7 @@ class GroupList extends React.Component {
 
 function mapStateToProps({ group, user }) {
   return {
+    isLoading: group.isLoading,
     list: group.list,
     selectedGroups: group.selectedGroups,
     isLogin: user.isLogin,

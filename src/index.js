@@ -11,7 +11,6 @@ const app = dva()
 // app.model(require('./models/example').default);
 app.model(require('./models/group').default)
 app.model(require('./models/message').default)
-// app.model(require('./models/socket').default)
 app.model(require('./models/user').default)
 
 // 4. Router

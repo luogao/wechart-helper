@@ -1,4 +1,5 @@
 import * as request from '../services'
+import { notify } from '../utils'
 
 const defaultState = {
   isLogin: false,
@@ -48,10 +49,14 @@ export default {
       }
     },
     *logout({ payload }, { call, put }) {
-      yield call(request.logout, payload)
-      yield put({ type: 'logoutSucceed' })
+      yield put({ type: 'clearUserInfo' })
+      try {
+        yield call(request.logout, payload)
+      } catch (err) {
+        notify('info', '服务端登出失败')
+      }
     },
-    *logoutSucceed({ payload }, { put }) {
+    *clearUserInfo({ payload }, { put }) {
       localStorage.removeItem(LOCALSTORAGEKEY)
       yield put({ type: 'setQrcode', payload: { qrcode: '' } })
       yield put({ type: 'login', payload: false })
